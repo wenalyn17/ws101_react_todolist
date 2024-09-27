@@ -1,0 +1,30 @@
+.Biodata{
+    max-width: 570px;
+    max-height: 700px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: pink;
+    border: 1px solid rgb(94, 68, 68);
+    box-shadow: 0 0 20px rgb(180, 157, 53);
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+  h1 {
+    font-size: 3.0rem;
+    text-align: center;
+    margin:30px 30px 30px 30px;
+  }
+  ul {
+    background-repeat: no-repeat;
+    text-transform: none;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+  }
+  p {
+    font-size: 1.5rem;
+    text-align: left;
+    margin: 0px 0px 0px 0px;
+    padding: 10px 0px 10px 0px;
+  
+  }

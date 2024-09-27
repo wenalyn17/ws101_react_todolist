@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Todo List</title>
+	<link rel="icon" type="image/png" href="https://www.google.com/images/branding/product/ico/googleg_lodp.ico">
+	<style type="text/css">
+		* {
+			box-sizing: border-box;
+		}
+		body {
+			margin: 15rem;
+			padding: 0;
+			font-family: "Open Sans", sans-serif;
+			font-size: 16px;
+			line-height: 1.5;
+			color: #333;
+			background-color: lightpink;
+		}
+		.container {
+			width: 800px;
+			margin: auto;
+			padding: 20px;
+			background-color: lightpink;
+			border-radius: 10px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			display: flex;
+			flex-direction: column;
+		}
+		.todo-list {
+			flex: 1;
+			margin: 20px 0;
+			padding: 0;
+			list-style: none;
+		}
+		.todo-item {
+			background-color: #fcfcfc;
+			border-bottom: 1px solid #ccc;
+			padding: 10px;
+			display: flex;
+			align-items: center;
+		}
+		.todo-item:last-child {
+			border-bottom: none;
+		}
+		.todo-item:hover {
+			background-color: #f2f2f2;
+		}
+		.todo-item .checkbox {
+			margin-right: 10px;
+			-webkit-appearance: none;
+			appearance: none;
+			width: 18px;
+			height: 18px;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+			background-color: #fff;
+			outline: none;
+		}
+		.todo-item .checkbox:checked {
+			background-color: #66d9ef;
+		}
+		.todo-item .title {
+			flex: 1;
+			margin-right: 10px;
+		}
+		.todo-item .description {
+			flex: 1;
+			color: #666;
+		}
+		.todo-item .delete {
+			float: right;
+			color: #fff;
+			background-color: #FF0000;
+			border: none;
+			padding: 10px 20px;
+			font-size: 16px;
+			cursor: pointer;
+			border-radius: 3px;
+		}
+		.todo-item .delete:hover {
+			background-color: #f33;
+		}
+		.todo-item .delete:focus {
+			outline: none;
+		}
+		.card {
+			background-color: #fff;
+			padding: 10px;
+			border-radius: 3px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			margin: 10px 0;
+		}
+		form {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			margin: 10px 0;
+		}
+		input[type="text"] {
+			flex: 1;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+			margin-right: 10px;
+		}
+		button {
+			background-color: #242627;
+			color: #fff;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 3px;
+			cursor: pointer;
+		}
+		.completed .title {
+			text-decoration: line-through;
+		}
+		.completed .description {
+			text-decoration: line-through;
+		}
+		.filter {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			margin: 10px 0;
+		}
+		.filter > * {
+			margin-right: 10px;
+		}
+		.filter > *:last-child {
+			margin-right: 0;
+		}
+		.filter .filter-type {
+			flex: 1;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+		}
+		.filter .filter-type:focus {
+			outline: none;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<h1>TODO LIST</h1>
+		<form>
+			<input type="text" id="new-todo-title" placeholder="Name" />
+			<input type="text" id="new-todo-description" placeholder="Content" />
+			<button type="submit">Add</button>
+		</form>
+		<div class="todo-list">
+
+		</div>
+	</div>
+	<script type="text/javascript">
+		document.addEventListener("DOMContentLoaded", function() {
+			var todoList = document.querySelector(".todo-list");
+			var newTodoForm = document.querySelector("form");
+			var filterType = document.querySelector(".filter-type");
+			var filterQuery = document.querySelector(".filter-query");
+			var todoItems = [];
+			var filter = {
+				type: "all",
+				query: ""
+			};
+			function updateFilter() {
+				var tempList = [];
+				todoItems.forEach(function(todoItem) {
+					if (filter.type === "all" || (filter.type === "completed" && todoItem.classList.contains("completed")) || (filter.type === "incompleted" && !todoItem.classList.contains("completed"))) {
+						if (filter.query === "" || todoItem.querySelector(".title").textContent.includes(filter.query) || todoItem.querySelector(".description").textContent.includes(filter.query)) {
+							tempList.push(todoItem);
+						}
+					}
+				});
+				todoList.innerHTML = "";
+				tempList.forEach(function(todoItem) {
+					todoList.appendChild(todoItem);
+				});
+			}
+			filterType.addEventListener("change", function() {
+				filter.type = filterType.value;
+				updateFilter();
+			});
+			filterQuery.addEventListener("input", function() {
+				filter.query = filterQuery.value;
+				updateFilter();
+			});
+			newTodoForm.addEventListener("submit", function(event) {
+				event.preventDefault();
+				var newTodoTitle = document.getElementById("new-todo-title").value;
+				var newTodoDescription = document.getElementById("new-todo-description").value;
+				if (newTodoTitle && newTodoDescription) {
+					var todoItem = document.createElement("div");
+					todoItem.className = "card todo-item";
+					todoItem.innerHTML = '<input type="checkbox" class="checkbox" />' +
+											'<img src="https://www.google.com/images/branding/product/ico/googleg_lodp.ico" class="card-icon" />' +
+											'<span contenteditable="true" class="title">' + newTodoTitle + '</span>' +
+											'<span contenteditable="true" class="description">' + newTodoDescription + '</span>' +
+											'<button class="delete">Delete</button>';
+					todoItem.addEventListener("click", function(event) {
+						if (event.target.tagName === "INPUT") {
+							event.target.parentNode.classList.toggle("completed");
+						}
+						if (event.target.tagName === "BUTTON" && event.target.classList.contains("delete")) {
+							todoItems.splice(todoItems.indexOf(event.target.parentNode), 1);
+							todoList.removeChild(event.target.parentNode);
+						}
+					});
+					todoItems.push(todoItem);
+					todoList.appendChild(todoItem);
+					document.getElementById("new-todo-title").value = "";
+					document.getElementById("new-todo-description").value = "";
+				}
+			});
+		});
+	</script>
+</body>
+</html>
+
